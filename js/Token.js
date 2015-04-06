@@ -100,7 +100,7 @@ function animate(myCircle, canvas, context, startTime) {
 		var linearSpeed = 500;
 		// pixels / second
 		var newY = linearSpeed * time / 1000;
-		
+
 		if(newY < canvas.height - myCircle.radius) {
 			isAnimated = true;
 
@@ -119,7 +119,6 @@ function animate(myCircle, canvas, context, startTime) {
 
 		} else {
 			// Fin de l'animation. Rajout de la position de l'objet dans la case associée.
-			console.log("here");
 			isAnimated = false;
 		}
 
