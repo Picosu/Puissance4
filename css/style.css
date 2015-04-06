@@ -1,0 +1,9 @@
+canvas {
+    width:150px;
+    height:600px;
+}
+
+div[#dropzone] {
+	padding:0;
+	margin:0;
+}
