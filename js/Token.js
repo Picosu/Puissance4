@@ -1,20 +1,29 @@
 'use strict';
 
+
+var rows = 4;
+var columns = 7;
+
 var canvas = document.getElementById('canvas2');
 var context = canvas.getContext('2d');
 canvas.width = 150;
 canvas.height = 600;
-var myCircle = {
-      x: canvas.width /2,
-      y: 0,
-      radius: canvas.width /2,
-};
+
+// Token model
+function Token(x, y, color) {
+	this.x = x;
+	this.y = y;
+	this.color = color;
+	this.radius = canvas.width/2;
+}
+
+var myCircle = new Token(canvas.width /2, 0, '#fbdd12');
+
 var isAnimated = false;
 function drawToken (token, color) {
 	if (!color) {
 		color = "#fbdd12";
 	}
-
 
 	// Don't forget those dimension to avoid circle to be messed up
 	canvas.width = 150;
@@ -23,6 +32,7 @@ function drawToken (token, color) {
 	var radius = canvas.width / 2;
 	var centerX = token.x;
 	var centerY = token.y;
+	console.log(centerY);
 
 	
 	context.beginPath();
@@ -41,17 +51,6 @@ function drawToken (token, color) {
 	context.closePath();
 }
 
-function resetCanvas() {
-	context.beginPath();
-	context.rect(0, 0, 150, 600);
-	context.fillStyle = 'orange';
-	context.fill();
-	context.lineWidth = 7;
-	context.strokeStyle = 'black';
-	context.stroke();
-}
-
-
 window.requestAnimFrame = (function(callback) {
 	return window.requestAnimationFrame 
 	|| window.webkitRequestAnimationFrame 
@@ -66,76 +65,66 @@ window.requestAnimFrame = (function(callback) {
 var players = [];
 
 $('#add-player').on('submit', function (e) {
-/*    var values = this.$$('input').map(function () {
-      return this.value;
+	var values = [];
+	$('input').each(function () {
+      values.push($(this).val());
     });
-    var playerName = values[0];
-    var color = values[1];
-    for(var i = players.length - 1; i >= 0; i--) {
-      if(players[i][1] === color) {
-        alert('Color already token.');
-        return e.cancel();
-      }
-    }
-    //logToHistory(playerName + ' enter the game.');
-    players.push([playerName, color]);*/
-    var player = '<div class="player"><input type="button" class="delete" value="Delete"><span class="token" style="background: ' + values[1] + '"></span>' + values[0].replace(/</g, '&lt;') + '</div>';
+    var player = '<div class="player"><input type="button" class="delete" value="Delete"><span class="token" style="background:' + values[1] + '"></span>' + values[0].replace(/</g, '&lt;') + '</div>';
     $('#players').html($('#players').html() + player);
-    /*var col = '';
-    for(var i = 0; i < 6; i++) {
-      col += Math.floor(Math.random() * 16).toString(16);
-    }
-    this.$('input[type="color"]').value = '#' + col;
-    var playerNameInput = this.$('input[type="text"]');
-    playerNameInput.value = '';
-    playerNameInput.focus();*/
-    return e.cancel();
+    console.log("work");
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
   });
 
-function animate(myCircle, canvas, context, startTime) {
+function animate(myCircle, canvas, context, startTime, nbTokens) {
 	// update
 
 		var time = (new Date()).getTime() - startTime;
-
+		var index = myCircle.y%canvas.height;
 		var linearSpeed = 500;
 		// pixels / second
 		var newY = linearSpeed * time / 1000;
-
-		if(newY < canvas.height - myCircle.radius) {
+		var limitY = canvas.height - (nbTokens * 2 * myCircle.radius) - myCircle.radius;
+		if(newY < limitY) {
 			isAnimated = true;
 
 			myCircle.y = newY;
 
-
-			// clear
-			// context.clearRect(0, 0, canvas.width, canvas.height);
 			drawToken(myCircle);
 
-			console.log("toto");
 			// request new frame
 			requestAnimFrame(function() {
-				animate(myCircle, canvas, context, startTime);
+				animate(myCircle, canvas, context, startTime, nbTokens);
 			});
 
 		} else {
 			// Fin de l'animation. Rajout de la position de l'objet dans la case associée.
+			var y = Math.ceil(myCircle.y /(2*myCircle.radius));
+			console.log(y);
+			tokens[myCircle.column + ',' + y] = myCircle;
 			isAnimated = false;
+			myCircle.y = limitY;
+			drawToken(myCircle);
 		}
-
-	
 }
 
-function drawTokenForCanvas(id) {
+var tokens = {};
+function drawTokenForCanvas(x) {
 	if (!isAnimated) {
-		var myCanvas = 'canvas' + id;
-		console.log(myCanvas);
-		canvas = document.getElementById(myCanvas);
+		var myCanvasId = 'canvas' + x;
+		myCircle.column = x;
+		canvas = document.getElementById(myCanvasId);
 		context = canvas.getContext('2d');
 		canvas.width = 150;
 		canvas.height = 600;
 
 		var startTime = (new Date()).getTime();
+		var nbTokens;
+		for (nbTokens = 0; tokens[x + ',' + (rows - nbTokens)]; nbTokens++);
 
-		animate(myCircle, canvas, context, startTime);
+		if(nbTokens < rows) {
+			animate(myCircle, canvas, context, startTime, nbTokens);
+		}
 	}
 }
