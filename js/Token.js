@@ -61,7 +61,6 @@ function drawAllToken(column) {
 
 		}
 	}
-
 }
 
 window.requestAnimFrame = (function(callback) {
@@ -84,7 +83,8 @@ $('#add-player').on('submit', function (e) {
     });
     var player = '<div class="player"><input type="button" class="delete" value="Delete"><span class="token" style="background:' + values[1] + '"></span>' + values[0].replace(/</g, '&lt;') + '</div>';
     $('#players').html($('#players').html() + player);
-
+    var player = new Player($('input[type="color"]').val());
+    players.push(player);
     e.preventDefault();
     e.stopPropagation();
     return false;
@@ -122,9 +122,8 @@ function animate(myCircle, canvas, context, startTime, nbTokens) {
 	}
 }
 
+var currentPlayer = 0;
 function drawTokenForCanvas(x) {
-
-
 	if (!isAnimated) {
 
 		// Définition du canvas et de ses propriétés pour le dessin.
@@ -135,8 +134,18 @@ function drawTokenForCanvas(x) {
 		canvas.width = 150;
 		canvas.height = 600;
 
-		// Création du jeton à déssiner.
-		var myToken = new Token(- canvas.width/2, $('input[type="color"]').val());
+		// Création du jeton à déssiner avec gestion de la couleur.
+		var color;
+		if (currentPlayer >= 0 && currentPlayer<players.length) {
+			color = players[currentPlayer].color;
+		}
+		else {
+			currentPlayer = 0; 
+			color = players[currentPlayer].color;
+		}
+		currentPlayer++;
+
+		var myToken = new Token(- canvas.width/2, color);
 		myToken.column = x;
 
 		var startTime = (new Date()).getTime();

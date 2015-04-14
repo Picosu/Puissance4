@@ -27,3 +27,17 @@ aside {
   padding: 3px;
   background: none;
 }
+
+#players {
+  .player {
+    padding: 1px 3px;
+  }
+  .token {
+    top: 3px;
+    left: -3px;
+    display: inline-block;
+    border: 1px solid #cfcfcf;
+    width: 18px;
+    height: 18px;
+  }
+}
