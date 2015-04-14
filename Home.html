@@ -8,7 +8,6 @@
 <body>
 	<aside>
 
-		<div id="players"></div>
 		<div>
 			<form id="add-player">
 				<input type="text" placeholder="Nom du joueur">
@@ -16,17 +15,19 @@
 				<input type="submit" value="Ajouter">
 			</form>
 		</div>
+		<div id="players"></div>
+
+ 	</aside>
 		<br />
 		<div id="dropzone">
-			<canvas id='canvas1' style="background : darkblue; border:1px dotted #000;" onclick="drawTokenForCanvas(1)"></canvas>
-			<canvas id='canvas2' style="background : darkblue; border:1px dotted #000;" onclick="drawTokenForCanvas(2)"></canvas>
-			<canvas id='canvas3' style="background : darkblue; border:1px dotted #000;" onclick="drawTokenForCanvas(3)"></canvas>
-			<canvas id='canvas4' style="background : darkblue; border:1px dotted #000;" onclick="drawTokenForCanvas(4)"></canvas>
-			<canvas id='canvas5' style="background : darkblue; border:1px dotted #000;" onclick="drawTokenForCanvas(5)"></canvas>
-			<canvas id='canvas6' style="background : darkblue; border:1px dotted #000;" onclick="drawTokenForCanvas(6)"></canvas>
-			<canvas id='canvas7' style="background : darkblue; border:1px dotted #000;" onclick="drawTokenForCanvas(7)"></canvas>
+			<canvas id='canvas1' style="background : darkblue; border:1px dotted #000;" width="100" height="400" onclick="drawTokenForCanvas(1)"></canvas>
+			<canvas id='canvas2' style="background : darkblue; border:1px dotted #000;" width="100" height="400" onclick="drawTokenForCanvas(2)"></canvas>
+			<canvas id='canvas3' style="background : darkblue; border:1px dotted #000;" width="100" height="400" onclick="drawTokenForCanvas(3)"></canvas>
+			<canvas id='canvas4' style="background : darkblue; border:1px dotted #000;" width="100" height="400" onclick="drawTokenForCanvas(4)"></canvas>
+			<canvas id='canvas5' style="background : darkblue; border:1px dotted #000;" width="100" height="400" onclick="drawTokenForCanvas(5)"></canvas>
+			<canvas id='canvas6' style="background : darkblue; border:1px dotted #000;" width="100" height="400" onclick="drawTokenForCanvas(6)"></canvas>
+			<canvas id='canvas7' style="background : darkblue; border:1px dotted #000;" width="100" height="400" onclick="drawTokenForCanvas(7)"></canvas>
 		</div>
- 	</aside>
  	
  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script type="text/javascript" src="./js/jscolor/jscolor.js"></script>

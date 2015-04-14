@@ -1,9 +1,29 @@
 canvas {
-    width:150px;
-    height:600px;
+    width:100px;
+    height:400px;
 }
 
 div[#dropzone] {
 	padding:0;
 	margin:0;
+}
+
+.token {
+  position: relative;
+  .border-radius(100%);
+  border: 2px solid #cfcfcf;
+  width: 10px;
+}
+
+aside {
+  margin: 0 10px;
+  width: 300px;
+  float: left;
+}
+
+.delete {
+  color: #ca4040;
+  float: right;
+  padding: 3px;
+  background: none;
 }

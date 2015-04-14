@@ -3,62 +3,65 @@
 
 var rows = 4;
 var columns = 7;
-
-var canvas = document.getElementById('canvas2');
-var context = canvas.getContext('2d');
-canvas.width = 150;
-canvas.height = 600;
+var tokens = {};
 
 // Token model
-function Token(x, y, color) {
-	this.x = x;
+function Token(y, color) {
+	this.x = 75;
 	this.y = y;
-	this.color = color;
-	this.radius = canvas.width/2;
-}
+	if (color) {
+		this.color = color;		
+	} else {
+		this.color = "#fbdd12";
+	}
+	this.column = 0;
+	this.radius = 75;
 
-var myCircle = new Token(canvas.width /2, 0, '#fbdd12');
+	this.draw = function() {
+		var canvas = document.getElementById("canvas" + this.column);
+		var context = canvas.getContext("2d");
+        
+		context.clearRect(0, 0, canvas.width, canvas.height);
+
+		context.beginPath();
+		context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+
+		context.fillStyle = this.color;
+
+		context.fill();
+		context.lineWidth = 4;
+		context.strokeStyle = "#000000";
+		context.stroke();
+
+		//context.closePath();
+	}
+};
 
 var isAnimated = false;
-function drawToken (token, color) {
-	if (!color) {
-		color = "#fbdd12";
-	}
-	// Don't forget those dimension to avoid circle to be messed up
-	canvas.width = 150;
-	canvas.height = 600;
 
-	var radius = canvas.width / 2;
-	var centerX = token.x;
-	var centerY = token.y;
-	console.log(centerY);
-
+function drawAllToken(column) {
+	var canvas = document.getElementById("canvas" + column);
+	var context = canvas.getContext("2d");
 	
-	context.beginPath();
-	context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-	//context.clip();
-	//context.beginPath();
-	//context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+	for (var row = rows; row >= 0; row--)
+	{
+		var item = tokens[column+','+row];
+		if (typeof(item) != 'undefined') {
+			context.beginPath();
 
-	context.fillStyle = color;
+			context.arc(item.x, item.y, item.radius, 0, 2 * Math.PI, false);
 
-	context.fill();
-	context.lineWidth = 4;
-	context.strokeStyle = "#000000";
-	context.stroke();
+			context.fillStyle = item.color;
 
-	context.closePath();
-}
+			context.fill();
+			context.lineWidth = 4;
+			context.strokeStyle = "#000000";
+			context.stroke();
+			context.closePath();
 
-function drawAllToken(tokens) {
-	for (var row = 0; row <= rows; row++)  {
-		for (var column = 0; column <= columns; column++) {
-			var token = tokens[row + ',' + column] || 0;
-			if (token) {
-				drawToken(tokens[row + ',' + column], tokens[row + ',' + column].color);
-			}
 		}
 	}
+
 }
 
 window.requestAnimFrame = (function(callback) {
@@ -81,7 +84,7 @@ $('#add-player').on('submit', function (e) {
     });
     var player = '<div class="player"><input type="button" class="delete" value="Delete"><span class="token" style="background:' + values[1] + '"></span>' + values[0].replace(/</g, '&lt;') + '</div>';
     $('#players').html($('#players').html() + player);
-    console.log("work");
+
     e.preventDefault();
     e.stopPropagation();
     return false;
@@ -89,7 +92,6 @@ $('#add-player').on('submit', function (e) {
 
 function animate(myCircle, canvas, context, startTime, nbTokens) {
 	// update
-	drawAllToken(tokens);
 	var time = (new Date()).getTime() - startTime;
 	var index = myCircle.y%canvas.height;
 	var linearSpeed = 500;
@@ -101,8 +103,8 @@ function animate(myCircle, canvas, context, startTime, nbTokens) {
 
 		myCircle.y = newY;
 
-		drawToken(myCircle);
-
+		myCircle.draw();
+		drawAllToken(myCircle.column);
 		// request new frame
 		requestAnimFrame(function() {
 			animate(myCircle, canvas, context, startTime, nbTokens);
@@ -111,34 +113,41 @@ function animate(myCircle, canvas, context, startTime, nbTokens) {
 	} else {
 		// Fin de l'animation. Rajout de la position de l'objet dans la case associée.
 		var y = Math.ceil(myCircle.y /(2*myCircle.radius));
-		console.log(y);
-		tokens[myCircle.column + ',' + y] = myCircle;
+		if (typeof(tokens[myCircle.column + ',' + y]) == 'undefined')
+			tokens[myCircle.column + ',' + y] = myCircle;
 		isAnimated = false;
 		myCircle.y = limitY;
-		drawToken(myCircle);
+		myCircle.draw();
+		drawAllToken(myCircle.column);
 	}
 }
 
-var tokens = {};
 function drawTokenForCanvas(x) {
+
+
 	if (!isAnimated) {
+
+		// Définition du canvas et de ses propriétés pour le dessin.
 		var myCanvasId = 'canvas' + x;
-		myCircle.column = x;
-		canvas = document.getElementById(myCanvasId);
-		context = canvas.getContext('2d');
+
+		var canvas = document.getElementById(myCanvasId);
+		var context = canvas.getContext('2d');
 		canvas.width = 150;
 		canvas.height = 600;
 
-		var canvasCopie = document.getElementById(myCanvasId);
-		var contextCopie = canvas.getContext('2d');
-
+		// Création du jeton à déssiner.
+		var myToken = new Token(- canvas.width/2, $('input[type="color"]').val());
+		myToken.column = x;
 
 		var startTime = (new Date()).getTime();
 		var nbTokens;
-		for (nbTokens = 0; tokens[x + ',' + (rows - nbTokens)]; nbTokens++);
 
-		if(nbTokens < rows) {
-			animate(myCircle, canvasCopie, contextCopie, startTime, nbTokens);
-		}
-	}
+		// On anime que jusqu'au dernier jeton.
+		for (nbTokens = 0; tokens[x + ',' + (rows - nbTokens)]; nbTokens++);
+			if(nbTokens < rows) {
+				animate(myToken, canvas, context, startTime, nbTokens);
+			} else {
+				drawAllToken(x);
+			}
+	} 
 }
