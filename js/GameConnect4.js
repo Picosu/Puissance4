@@ -49,10 +49,21 @@ $('#add-player').on('submit', function (e) {
 	$('input').each(function () {
       values.push($(this).val());
     });
+
     var player = '<div class="player"><input type="button" class="delete" value="Delete"><span class="token" style="background:' + values[1] + '"></span>' + values[0].replace(/</g, '&lt;') + '</div>';
     $('#players').html($('#players').html() + player);
     var player = new Player($('input[type="color"]').val());
     players.push(player);
+
+    $('input[type="text"]').val("");
+    // Changement de la couleur pour éviter les doublons
+    var newColor = '';
+    for(var i = 0; i < 6; i++) {
+      newColor += Math.floor(Math.random() * 16).toString(16);
+    }
+    console.log("avant");
+    $('input[type="color"]').val('#' + newColor);
+    console.log("après");
     e.preventDefault();
     e.stopPropagation();
     return false;
