@@ -20,9 +20,9 @@ input[type=number] {
 
 #dropzone canvas {
   width:100px;
-  height:400px;
-  background: darkblue;
-  border:1px dotted #000;
+  height:500px;
+  background: #C0C0C0;
+  border:1px dotted #CfCfCf;
 }
 
 .token {

@@ -8,7 +8,7 @@ function Token(y, color) {
 		this.color = "#fbdd12";
 	}
 	this.column = 0;
-	this.radius = 75;
+	this.radius = 73;
 
 	this.draw = function() {
 		var canvas = document.getElementById("canvas" + this.column);

@@ -61,9 +61,7 @@ $('#add-player').on('submit', function (e) {
     for(var i = 0; i < 6; i++) {
       newColor += Math.floor(Math.random() * 16).toString(16);
     }
-    console.log("avant");
     $('input[type="color"]').val('#' + newColor);
-    console.log("après");
     $('input[type="text"]').focus();
     e.preventDefault();
     e.stopPropagation();
@@ -108,12 +106,15 @@ $('#startGame').on('submit', function (e) {
 	$('input[type="number"]').each(function () {
 		values.push($(this).val());
     });
+    $("#dropzone canvas").css("height", function( index ) {
+		return rows * 150;
+	});
     rows = values[0];
     columns = values[1];
     $('#dropzone').html('');
     for (var column = 0; column < columns; column++) {
     	//console.log(column);
-    	var canvas = '<canvas id="canvas' + column + '" width="100" height="400" onclick="drawTokenForCanvas(' + column + ')"></canvas>';
+    	var canvas = '<canvas id="canvas' + column + '" onclick="drawTokenForCanvas(' + column + ')"></canvas>';
     	console.log(canvas);
     	$('#dropzone').append(canvas);
     }
@@ -132,7 +133,7 @@ function drawTokenForCanvas(x) {
 		var canvas = document.getElementById(myCanvasId);
 		var context = canvas.getContext('2d');
 		canvas.width = 150;
-		canvas.height = 600;
+		canvas.height = 150 * rows +1;
 
 		// Création du jeton à déssiner avec gestion de la couleur.
 		var color;
