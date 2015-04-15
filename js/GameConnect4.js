@@ -64,6 +64,7 @@ $('#add-player').on('submit', function (e) {
     console.log("avant");
     $('input[type="color"]').val('#' + newColor);
     console.log("après");
+    $('input[type="text"]').focus();
     e.preventDefault();
     e.stopPropagation();
     return false;
@@ -100,6 +101,26 @@ function animate(myCircle, canvas, context, startTime, nbTokens) {
 		drawAllToken(myCircle.column);
 	}
 }
+
+$('#startGame').on('submit', function (e) {
+	// body...
+	console.log("eho");
+	var values = [];
+	$('input[type="number"]').each(function () {
+		values.push($(this).val());
+    });
+    rows = values[0];
+    columns = values[1];
+    console.log("values : " + values);
+    $('#dropzone').html('');
+    for (var column = 0; column < columns; column++) {
+    	//console.log(column);
+    	var canvas = '<canvas id="canvas' + column + '" width="100" height="400" onclick="drawTokenForCanvas(' + column + ')"></canvas>';
+    	$('#dropzone')..append(canvas);
+    }
+    console.log($('#dropzone').html() + canvas);
+
+});
 
 var currentPlayer = 0;
 function drawTokenForCanvas(x) {
