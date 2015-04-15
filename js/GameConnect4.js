@@ -104,22 +104,22 @@ function animate(myCircle, canvas, context, startTime, nbTokens) {
 
 $('#startGame').on('submit', function (e) {
 	// body...
-	console.log("eho");
 	var values = [];
 	$('input[type="number"]').each(function () {
 		values.push($(this).val());
     });
     rows = values[0];
     columns = values[1];
-    console.log("values : " + values);
     $('#dropzone').html('');
     for (var column = 0; column < columns; column++) {
     	//console.log(column);
     	var canvas = '<canvas id="canvas' + column + '" width="100" height="400" onclick="drawTokenForCanvas(' + column + ')"></canvas>';
-    	$('#dropzone')..append(canvas);
+    	console.log(canvas);
+    	$('#dropzone').append(canvas);
     }
-    console.log($('#dropzone').html() + canvas);
-
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
 });
 
 var currentPlayer = 0;
